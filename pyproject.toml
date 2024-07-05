@@ -25,6 +25,7 @@ Flask = "^2.0.0"
 spleeter = "2.4.0"
 streamlit = "^1.36.0"
 sndfile = "^0.2.0"
+soundfile = "^0.12.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.1"
