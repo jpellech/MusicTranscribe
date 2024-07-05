@@ -57,6 +57,9 @@ def process_file():
             return f"Zip file not found: {zip_filepath}", 404
     else:
         return f"Output folder not found: {output_folder}", 404
+def install_poetry():
+    subprocess.run(["curl", "-sSL", "https://install.python-poetry.org", "|", "python3", "-"], check=True)
+    os.environ["PATH"] += os.pathsep + os.path.expanduser("~/.local/bin")
 
 def check_and_install_spleeter():
     try:
@@ -67,6 +70,6 @@ def check_and_install_spleeter():
         subprocess.run(["poetry", "install"])
 
 if __name__ == '__main__':
-    subprocess.run(["curl", "-sSL", "https://install.python-poetry.org", "|", "python3", "-"])
+    install_poetry()
     check_and_install_spleeter()
     app.run(debug=True)
