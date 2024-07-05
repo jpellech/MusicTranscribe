@@ -76,4 +76,4 @@ def check_and_install_spleeter():
 if __name__ == '__main__':
     install_poetry()
     check_and_install_spleeter()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8501)
