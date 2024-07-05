@@ -67,5 +67,6 @@ def check_and_install_spleeter():
         subprocess.run(["poetry", "install"])
 
 if __name__ == '__main__':
+    subprocess.run(["curl", "-sSL", "https://install.python-poetry.org", "|", "python3", "-"])
     check_and_install_spleeter()
     app.run(debug=True)
