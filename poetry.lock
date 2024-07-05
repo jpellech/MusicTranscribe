@@ -2498,6 +2498,19 @@ files = [
 ]
 
 [[package]]
+name = "sndfile"
+version = "0.2.0"
+description = "A CFFI wrapper around libsndfile"
+optional = false
+python-versions = "*"
+files = [
+    {file = "sndfile-0.2.0.tar.gz", hash = "sha256:98fadb0420608ce9ff8840603d0aa9d6ce2482eac7e4584059895f0b4231b90d"},
+]
+
+[package.dependencies]
+cffi = ">=1.0.0"
+
+[[package]]
 name = "sniffio"
 version = "1.3.0"
 description = "Sniff out which async library your code is running under"
@@ -3199,4 +3212,4 @@ evaluation = ["musdb", "museval"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.9.7"
-content-hash = "85eb9577c88a7c6108443270aff8ed85ec4e7d71a302e14f84aec8f1dd7c1b7d"
+content-hash = "e9276f8d8f5b7cf76fd31092733ee9464ba66af1de24596b7cda1d896d0d2dc1"
