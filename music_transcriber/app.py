@@ -11,7 +11,11 @@ os.makedirs(output_folder, exist_ok=True)
 
 # Streamlit App
 st.title("Music Transcriber")
+st.write("Drag the midi files into any Musical Notation software to learn one or more parts from sheet music.")
+st.write("Or drag the midi into your Digital Audio Workstation and change the sounds.")
+st.write("Use the isolated .mp3s to sample certain parts of songs.")
 st.write("Upload an audio file to transcribe it into instrument-separated MIDI and .wav files.")
+
 
 uploaded_file = st.file_uploader("Choose an audio file", type=['wav', 'mp3', 'mp4', 'flac'])
 
