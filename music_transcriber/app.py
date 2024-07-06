@@ -39,6 +39,7 @@ if uploaded_file is not None:
 
     # Run MusicAssist.py with the file path
     command = ["poetry", "run", "python3", "music_transcriber/MusicAssist.py", file_path]
+    command = ["python3", "music_transcriber/MusicAssist.py", file_path]
     try:
         subprocess.run(command, check=True)
         st.success('File processed successfully.')
