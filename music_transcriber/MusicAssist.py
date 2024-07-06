@@ -1,11 +1,11 @@
 import pathlib
+from pydub import AudioSegment
 import librosa
 import scipy.io.wavfile as wavfile
 import os
 import numpy as np
 import soundfile as sf
 import scipy
-from pydub import AudioSegment
 import soundfile as sf
 import tensorflow as tf
 import sys
