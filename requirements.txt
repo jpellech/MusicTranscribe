@@ -946,8 +946,6 @@ six==1.16.0 ; python_version >= "3.8" and python_full_version < "3.9.7" \
 smmap==5.0.1 ; python_version >= "3.8" and python_full_version < "3.9.7" \
     --hash=sha256:dceeb6c0028fdb6734471eb07c0cd2aae706ccaecab45965ee83f11c8d3b1f62 \
     --hash=sha256:e6d8668fa5f93e706934a62d7b4db19c8d9eb8cf2adbb75ef1b675aa332b69da
-sndfile==0.2.0 ; python_version >= "3.8" and python_full_version < "3.9.7" \
-    --hash=sha256:98fadb0420608ce9ff8840603d0aa9d6ce2482eac7e4584059895f0b4231b90d
 sniffio==1.3.1 ; python_version >= "3.8" and python_full_version < "3.9.7" \
     --hash=sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2 \
     --hash=sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc
