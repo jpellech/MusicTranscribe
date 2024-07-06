@@ -342,7 +342,7 @@ libclang==18.1.1 ; python_version >= "3.8" and python_full_version < "3.9.7" \
     --hash=sha256:a1214966d08d73d971287fc3ead8dfaf82eb07fb197680d8b3859dbbbbf78250 \
     --hash=sha256:c533091d8a3bbf7460a00cb6c1a71da93bffe148f172c7d03b1c31fbf8aa2a0b \
     --hash=sha256:cf4a99b05376513717ab5d82a0db832c56ccea4fd61a69dbb7bccf2dfb207dbe
-librosa>0.10.2.post1 ; python_version >= "3.8" and python_full_version < "3.9.7" \
+librosa>0.10.1 ; python_version >= "3.8" and python_full_version < "3.9.7" \
     --hash=sha256:cd99f16717cbcd1e0983e37308d1db46a6f7dfc2e396e5a9e61e6821e44bd2e7 \
     --hash=sha256:dc882750e8b577a63039f25661b7e39ec4cfbacc99c1cffba666cd664fb0a7a0
 llvmlite==0.41.1 ; python_version >= "3.8" and python_full_version < "3.9.7" \
