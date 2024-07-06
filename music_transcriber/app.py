@@ -28,12 +28,8 @@ if uploaded_file is not None:
         f.write(uploaded_file.getbuffer())
     st.success(f"File {filename} uploaded successfully.")
 
-    # Get the path to the Poetry-managed virtual environment's Python interpreter
-    poetry_env_path = subprocess.run(["poetry", "env", "info", "--path"], capture_output=True, text=True).stdout.strip()
-    python_executable = os.path.join(poetry_env_path, "bin", "python")
-
-    # Run MusicAssist.py with the file path
-    command = [python_executable, "music_transcriber/MusicAssist.py", file_path]
+    # Assuming 'python' is the correct interpreter with all dependencies installed
+    command = ["python", "music_transcriber/MusicAssist.py", file_path]
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
         st.success('File processed successfully.')
