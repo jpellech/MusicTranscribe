@@ -13,7 +13,6 @@ os.makedirs(output_folder, exist_ok=True)
 st.title("Music Transcriber")
 st.subheader("Upload an audio file to transcribe it into instrument-separated MIDI and .wav files.")
 
-
 uploaded_file = st.file_uploader("Choose an audio file", type=['wav', 'mp3', 'mp4', 'flac'])
 st.write("")
 st.subheader("Usage tips:")
@@ -29,14 +28,19 @@ if uploaded_file is not None:
         f.write(uploaded_file.getbuffer())
     st.success(f"File {filename} uploaded successfully.")
 
+    # Get the path to the Poetry-managed virtual environment's Python interpreter
+    poetry_env_path = subprocess.run(["poetry", "env", "info", "--path"], capture_output=True, text=True).stdout.strip()
+    python_executable = os.path.join(poetry_env_path, "bin", "python")
+
     # Run MusicAssist.py with the file path
-    command = ["poetry", "run", "python3", "music_transcriber/MusicAssist.py", file_path]
-    # command = ["python3", "music_transcriber/MusicAssist.py", file_path]
+    command = [python_executable, "music_transcriber/MusicAssist.py", file_path]
     try:
-        subprocess.run(command, check=True)
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
         st.success('File processed successfully.')
+        st.text(result.stdout)
     except subprocess.CalledProcessError as e:
         st.error(f'Error processing file: {e}')
+        st.text(e.stderr)
 
     # Check if the output folder exists and contains the expected zip file
     zip_filename = f"{os.path.splitext(filename)[0]}.zip"
