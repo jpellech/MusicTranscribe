@@ -64,7 +64,7 @@ pkgutil-resolve-name==1.3.10 ; python_version >= "3.8" and python_version < "3.9
 platformdirs==4.2.2 ; python_version >= "3.8" and python_full_version < "3.9.7"
 pooch==1.8.2 ; python_version >= "3.8" and python_full_version < "3.9.7"
 pretty-midi==0.2.10 ; python_version >= "3.8" and python_full_version < "3.9.7"
-protobuf==5.27.2 ; python_version >= "3.8" and python_full_version < "3.9.7"
+protobuf==3.20.1 ; python_version >= "3.8" and python_full_version < "3.9.7"
 pyarrow==16.1.0 ; python_version >= "3.8" and python_full_version < "3.9.7"
 pyasn1-modules==0.4.0 ; python_version >= "3.8" and python_full_version < "3.9.7"
 pyasn1==0.6.0 ; python_version >= "3.8" and python_full_version < "3.9.7"
