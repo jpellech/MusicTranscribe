@@ -1,7 +1,7 @@
 import streamlit as st
 import subprocess
 import os
-from werkzeug.utils import secure_filename
+from Werkzeug.utils import secure_filename
 
 # Set up upload folder
 upload_folder = 'inputs'
