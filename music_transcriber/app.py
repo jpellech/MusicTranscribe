@@ -29,9 +29,16 @@ if uploaded_file is not None:
         f.write(uploaded_file.getbuffer())
     st.success(f"File {filename} uploaded successfully.")
 
+    # Install poetry dependencies
+    command = ["poetry", "install"]
+    try:
+        subprocess.run(command, check=True)
+        st.success('File processed successfully.')
+    except subprocess.CalledProcessError as e:
+        st.error(f'Error processing file: {e}')
+
     # Run MusicAssist.py with the file path
-    # command = ["poetry", "run", "python3", "music_transcriber/MusicAssist.py", file_path]
-    command = ["python3", "music_transcriber/MusicAssist.py", file_path]
+    command = ["poetry", "run", "python3", "music_transcriber/MusicAssist.py", file_path]
     try:
         subprocess.run(command, check=True)
         st.success('File processed successfully.')
