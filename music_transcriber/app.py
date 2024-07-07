@@ -3,7 +3,7 @@ import subprocess
 import os
 from werkzeug.utils import secure_filename
 
-# Set up upload folder
+# Set up upload and output folders
 upload_folder = 'inputs'
 output_folder = 'output'
 os.makedirs(upload_folder, exist_ok=True)
@@ -16,8 +16,8 @@ st.subheader("Upload an audio file to transcribe it into instrument-separated MI
 uploaded_file = st.file_uploader("Choose an audio file", type=['wav', 'mp3', 'mp4', 'flac'])
 st.write("")
 st.subheader("Usage tips:")
-st.write("Drag the midi files into any musical notation software to learn one or more parts from sheet music.")
-st.write("Or drag the midi into your digital audio workstation and change the sounds.")
+st.write("Drag the MIDI files into any musical notation software to learn one or more parts from sheet music.")
+st.write("Or drag the MIDI into your digital audio workstation and change the sounds.")
 st.write("Use the isolated .mp3s to sample certain parts of songs.")
 
 if uploaded_file is not None:
@@ -29,7 +29,7 @@ if uploaded_file is not None:
     st.success(f"File {filename} uploaded successfully.")
 
     # Assuming 'python' is the correct interpreter with all dependencies installed
-    command = ["python", "music_transcriber/MusicAssist.py", file_path]
+    command = ["python", "MusicAssist.py", file_path]
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
         st.success('File processed successfully.')
