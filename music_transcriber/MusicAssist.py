@@ -691,6 +691,96 @@ def delete_files_and_directories_in_inputs():
         shutil.rmtree(inputs_path, onerror=remove_readonly)
         os.makedirs(inputs_path)
 
+def process_music(file_path):
+    # Clear any previous outputs if they exist.
+    delete_files_in_output()
+
+    with open(output_path + "/chord_chart.txt", 'w') as file:
+        file.write('')
+    for file in os.listdir(output_path):
+        if file != "chord_chart.txt" and file != ".DS_Store":
+            try:
+                os.remove(os.path.join(output_path, file))
+            except PermissionError as e:
+                print(f"Permission error: {e}")
+
+    for file in os.listdir(splits_path):
+        if file != ".DS_Store":
+            try:
+                os.remove(os.path.join(splits_path, file))
+            except PermissionError as e:
+                print(f"Permission error: {e}")
+    """
+    #check command arguments 
+    if len(sys.argv) > 2 or len(sys.argv) == 0:
+        print("Please enter a valid file path as your only input.")
+        sys.exit()
+
+    #try to load the audio file, throw an exception if it's invalid
+    try: 
+        librosa.load(os.path.realpath(sys.argv[1]), sr=None)
+        print(os.path.realpath(sys.argv[1]), 'is a valid filepath.')
+    except:
+        print("The filepath you entered was not found or could not be loaded.")
+        print("filepath: ", os.path.realpath(sys.argv[1]))
+        sys.exit()
+    """
+    
+    # define audio file path
+    audio_file = os.path.realpath(file_path)
+    trimmed = trimmed_name = trim_file_path(audio_file)
+    
+    #load file and determine tempo
+    y, sr = librosa.load(audio_file, sr=None)
+    tempo, beats = librosa.beat.beat_track(y=y, sr=sr)
+
+    #booleans: Determine what is in the track (for seperation)
+    bass, drums, piano, vocal, other, chord_chart = bass_drum_piano_vocal_other_chart()
+    
+    print("seperating sources . . . ")
+    separate(audio_file, splits_path)
+
+    #convert each split to .mp3 to ensure zippability
+    for stem in ['vocals', 'drums', 'piano', 'other', 'bass']:
+        to_mp3_in = splits_path + '/' + trimmed + '/' + stem + '.wav'
+        to_mp3_out = splits_path + '/' + trimmed + '/' + stem + '.mp3'
+        print('Converting ', to_mp3_in, ' to ', to_mp3_out, ' in ', 'splits_path')
+        convert_wav_to_mp3(to_mp3_in, to_mp3_out)
+        os.remove(to_mp3_in)
+
+    #Convert all splits to midi and write a chord chard. All files will be written to the 'outputs' folder.
+    tf.compat.v1.config.experimental_run_functions_eagerly(True)
+
+    # convert all .wavs to midis concurrently 
+    #print("splitting midis using multi-threading . . . ")
+    to_midi_all(splits_path + '/' + trimmed, output_path)
+
+    #if chord_chart:
+    chords_dict = chords_on_beats(2, audio_file)
+
+    print(".mid's and chord_chart.txt all done")
+
+    #move splits to the output folder
+    shutil.move(splits_path + '/' + trimmed + '/vocals.mp3', output_path)
+    print('moved vocals.mp3 from splits to output')
+    shutil.move(splits_path + '/' + trimmed + '/drums.mp3', output_path)
+    print('moved drums.mp3 from splits to output')
+    shutil.move(splits_path + '/' + trimmed + '/piano.mp3', output_path)
+    print('moved piano.mp3 from splits to output')
+    shutil.move(splits_path + '/' + trimmed + '/other.mp3', output_path)
+    print('moved other.mp3 from splits to output')
+    shutil.move(splits_path + '/' + trimmed + '/bass.mp3', output_path)
+    print('moved bass.mp3 from splits to output')
+
+    # turn into a zip file
+    # shutil.make_archive(output_path + '/' + trimmed, "zip", output_path)
+    #make_zip_with_zip64(output_path, trimmed, output_path)
+    print('attempting to zip...')
+    make_zip_with_shell(output_path, output_path, trimmed)
+    print('all zipped up!')
+    delete_files_and_directories_in_inputs()
+    delete_files_and_directories_in_splits()
+    print(".mid's and chord_chart.txt are HOT out the oven in /MusicTranscribe/outputs/")
 
 if __name__ == '__main__':
     # Clear any previous outputs if they exist.

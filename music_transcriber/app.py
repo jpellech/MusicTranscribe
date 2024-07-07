@@ -1,7 +1,7 @@
 import streamlit as st
-import subprocess
 import os
 from werkzeug.utils import secure_filename
+from MusicAssist import process_music  # Import the main function from MusicAssist.py
 
 # Set up upload and output folders
 upload_folder = 'inputs'
@@ -28,15 +28,13 @@ if uploaded_file is not None:
         f.write(uploaded_file.getbuffer())
     st.success(f"File {filename} uploaded successfully.")
 
-    # Assuming 'python' is the correct interpreter with all dependencies installed
-    command = ["python", "MusicAssist.py", file_path]
     try:
-        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        # Call the process_music function from MusicAssist.py
+        result = process_music(file_path)
         st.success('File processed successfully.')
-        st.text(result.stdout)
-    except subprocess.CalledProcessError as e:
+        st.text(result)
+    except Exception as e:
         st.error(f'Error processing file: {e}')
-        st.text(e.stderr)
 
     # Check if the output folder exists and contains the expected zip file
     zip_filename = f"{os.path.splitext(filename)[0]}.zip"
