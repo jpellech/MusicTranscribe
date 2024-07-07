@@ -3254,4 +3254,4 @@ evaluation = ["musdb", "museval"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.9.7"
-content-hash = "6d19425adcbd457b1ea18d085da3589f1cf05471ed76612bf0647a9d10433b05"
+content-hash = "f06388548ecc27ddfd57fc2ef743ba311287243883e02317453b902f1ef34032"
