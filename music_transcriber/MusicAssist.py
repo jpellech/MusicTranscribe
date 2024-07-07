@@ -43,7 +43,7 @@ def chords_on_beats(harmonic_intensity, file_path):
     # seperates audio_file into harmonic and percussive tracks. harmonic_track, percussive_track are file paths
     print("separating harmonic and percussive tracks . . . ")
     #harmonic_track, percussive_track = separate_harmonic_percussive(audio_file)
-    harmonic_track = audio_file
+    harmonic_track = file_path
 
     # seperate foreground and background of harmonic_track into feature chromagrams
     print("Separating foreground and background . . . ")
@@ -780,7 +780,7 @@ def process_music(file_path):
     print('all zipped up!')
     delete_files_and_directories_in_inputs()
     delete_files_and_directories_in_splits()
-    print(".mid's and chord_chart.txt are HOT out the oven in /MusicTranscribe/outputs/")
+    print(".mid's and chord_chart.txt are HOT out the oven in /MusicTranscribe/music_transcriber/output/")
 
 if __name__ == '__main__':
     # Clear any previous outputs if they exist.
@@ -871,4 +871,4 @@ if __name__ == '__main__':
     print('all zipped up!')
     delete_files_and_directories_in_inputs()
     delete_files_and_directories_in_splits()
-    print(".mid's and chord_chart.txt are HOT out the oven in /MusicTranscribe/outputs/")
+    print(".mid's and chord_chart.txt are HOT out the oven in /MusicTranscribe/music_transcriber/output/")
