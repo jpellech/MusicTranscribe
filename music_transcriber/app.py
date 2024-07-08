@@ -2,6 +2,7 @@ import streamlit as st
 import os
 from werkzeug.utils import secure_filename
 from MusicAssist import process_music  # Import the main function from MusicAssist.py
+import tensorflow as tf
 
 # Set up upload and output folders relative to the script location
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -26,6 +27,7 @@ def load_model():
     tf.compat.v1.config.experimental_run_functions_eagerly(True)
     separator = Separator('spleeter:5stems')
     return seperator
+
 separator = load_model()
 
 if uploaded_file is not None:
