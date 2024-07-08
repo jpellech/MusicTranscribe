@@ -20,6 +20,14 @@ st.subheader("How it works and usage tips")
 st.write("Music Transcriber first extracts any piano, voice, drums and/or bass from your audio file. Whatever is remaining will get put into the 'other' category. All five of these tracks will then be converted to midi. The midi conversion works best for single timbre instruments. This means if whats left in the 'other' folder is more than one instrument, its midi conversion will not work successfully. This means if you're not transcribing piano, drums, bass, or voice; the best arrangements are solo performances, guitar duets (with voice, piano, bass, or drums), or even string quartets. Play around with it! Here are some things you can do with the extracted stems and midi files: Drag the MIDI files into any musical notation software to learn one or more parts from sheet music. Or drag the MIDI into your digital audio workstation and change the sounds.")
 st.write("Contact jpellechia04@gmail.com for any questions!")
 
+@st.cache
+def load_model(): 
+    from spleeter.separator import Separator
+    tf.compat.v1.config.experimental_run_functions_eagerly(True)
+    separator = Separator('spleeter:5stems')
+    return seperator
+separator = load_model()
+
 if uploaded_file is not None:
     # Save uploaded file
     filename = secure_filename(uploaded_file.name)
@@ -29,7 +37,7 @@ if uploaded_file is not None:
     st.success(f"File {filename} uploaded successfully.")
 
     try:
-        result = process_music(file_path)
+        result = process_music(file_path, separator)
         st.success('File processed successfully.')
 
     except Exception as e:

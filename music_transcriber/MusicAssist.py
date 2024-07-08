@@ -523,10 +523,8 @@ def separate_harmonic_percussive(input_audio_file, output_dir="output"):
 """
 Spleeter's separate_to_file
 """
-def separate(audio_file, output_directory):
-    from spleeter.separator import Separator
-    tf.compat.v1.config.experimental_run_functions_eagerly(True)
-    separator = Separator('spleeter:5stems')
+def separate(audio_file, output_directory, separator):
+
     separator.separate_to_file(audio_file, output_directory, synchronous=True)
 
 """
@@ -691,7 +689,7 @@ def delete_files_and_directories_in_inputs():
         shutil.rmtree(inputs_path, onerror=remove_readonly)
         os.makedirs(inputs_path)
 
-def process_music(file_path):
+def process_music(file_path, separator):
     # Clear any previous outputs if they exist.
     delete_files_in_output()
 
@@ -738,7 +736,7 @@ def process_music(file_path):
     bass, drums, piano, vocal, other, chord_chart = bass_drum_piano_vocal_other_chart()
     
     print("seperating sources . . . ")
-    separate(audio_file, splits_path)
+    separate(audio_file, splits_path, separator)
 
     #convert each split to .mp3 to ensure zippability
     for stem in ['vocals', 'drums', 'piano', 'other', 'bass']:
