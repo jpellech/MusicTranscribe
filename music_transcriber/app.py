@@ -26,7 +26,7 @@ def load_model():
     from spleeter.separator import Separator
     tf.compat.v1.config.experimental_run_functions_eagerly(True)
     separator = Separator('spleeter:5stems')
-    return seperator
+    return separator
 
 separator = load_model()
 
