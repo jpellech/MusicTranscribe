@@ -28,13 +28,13 @@ if uploaded_file is not None:
         f.write(uploaded_file.getbuffer())
     st.success(f"File {filename} uploaded successfully.")
 
-    try:
+    # try:
         # Call the process_music function from MusicAssist.py
-        result = process_music(file_path)
-        st.success('File processed successfully.')
+    result = process_music(file_path)
+    st.success('File processed successfully.')
 
-    except Exception as e:
-        st.error(f'Error processing file: {e}')
+    # except Exception as e:
+    #     st.error(f'Error processing file: {e}')
 
     # Check if the output folder exists and contains the expected zip file
     zip_filename = f"{os.path.splitext(filename)[0]}.zip"
