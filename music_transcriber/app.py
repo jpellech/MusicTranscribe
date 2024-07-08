@@ -12,7 +12,9 @@ def load_model():
     separator = Separator('spleeter:5stems')
     return separator
 
-separator = load_model()
+with st.spinner('Loading model...'):
+    separator = load_model()
+st.success('Model loaded successfully!')
 
 # Set up upload and output folders relative to the script location
 base_dir = os.path.dirname(os.path.abspath(__file__))
