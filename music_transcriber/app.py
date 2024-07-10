@@ -24,14 +24,13 @@ st.write("Contact jpellechia04@gmail.com for any questions!")
 @st.cache_resource
 def load_model(): 
     from spleeter.separator import Separator
-    tf.compat.v1.config.experimental_run_functions_eagerly(True)
+    tf.compat.v1.config.experimental_run_functions_eagerly(False)
     separator = Separator('spleeter:5stems')
     return separator
 
 # Load the model when the app starts
 with st.spinner('Loading model...'):
     separator = load_model()
-st.success('Model loaded successfully!')
 
 if uploaded_file is not None:
     # Save uploaded file
