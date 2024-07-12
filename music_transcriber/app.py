@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 from werkzeug.utils import secure_filename
-from MusicAssist import process_music  # Import the main function from MusicAssist.py
+from .MusicAssist import process_music  # Import the main function from MusicAssist.py
 import tensorflow as tf
 
 # Set up upload and output folders relative to the script location
