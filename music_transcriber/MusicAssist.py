@@ -728,7 +728,7 @@ def process_music(file_path, separator, use_concurrency):
     bass, drums, piano, vocal, other, chord_chart = bass_drum_piano_vocal_other_chart()
     
     print("separating sources . . . ")
-    separate(audio_file, splits_path, separator, synchronous=True)
+    separate(audio_file, splits_path, separator)
 
     for stem in ['vocals', 'drums', 'piano', 'other', 'bass']:
         to_mp3_in = splits_path + '/' + trimmed + '/' + stem + '.wav'
@@ -807,7 +807,7 @@ if __name__ == '__main__':
     separator = load_model()
 
     print("separating sources . . . ")
-    separate(audio_file, splits_path, separator, synchronous=True)
+    separate(audio_file, splits_path, separator)
 
     for stem in ['vocals', 'drums', 'piano', 'other', 'bass']:
         to_mp3_in = splits_path + '/' + trimmed + '/' + stem + '.wav'
