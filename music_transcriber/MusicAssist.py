@@ -695,8 +695,13 @@ def delete_files_in_output():
 
 def delete_files_and_directories_in_splits():
     if os.path.exists(splits_path):
-        shutil.rmtree(splits_path, onerror=remove_readonly)
-        os.makedirs(splits_path)
+        for filename in os.listdir(splits_path):
+            file_path = os.path.join(splits_path, filename)
+            if filename != 'build.txt':
+                if os.path.isdir(file_path):
+                    shutil.rmtree(file_path, onerror=remove_readonly)
+                else:
+                    os.remove(file_path)
 
 def delete_files_and_directories_in_inputs():
     if os.path.exists(inputs_path):
