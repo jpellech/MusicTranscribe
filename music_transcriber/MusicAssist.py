@@ -531,7 +531,6 @@ def load_model():
 Spleeter's separate_to_file
 """
 def separate(audio_file, output_directory, separator):
-
     separator.separate_to_file(audio_file, output_directory, synchronous=True)
 
 """
@@ -728,8 +727,11 @@ def process_music(file_path, separator, use_concurrency):
     bass, drums, piano, vocal, other, chord_chart = bass_drum_piano_vocal_other_chart()
     
     print("separating sources . . . ")
-    separate(audio_file, splits_path, separator)
 
+    separate(audio_file, splits_path, separator)
+    print('Done separating sources.')
+
+    print('converting to mp3')
     for stem in ['vocals', 'drums', 'piano', 'other', 'bass']:
         to_mp3_in = splits_path + '/' + trimmed + '/' + stem + '.wav'
         to_mp3_out = splits_path + '/' + trimmed + '/' + stem + '.mp3'
@@ -739,8 +741,10 @@ def process_music(file_path, separator, use_concurrency):
 
     tf.compat.v1.config.experimental_run_functions_eagerly(True)
 
+    print('converting to midi')    
     to_midi_all(splits_path + '/' + trimmed, output_path, use_concurrency=use_concurrency)
 
+    'writing chord dictionary'
     chords_dict = chords_on_beats(2, audio_file)
 
     print(".mid's and chord_chart.txt all done")
