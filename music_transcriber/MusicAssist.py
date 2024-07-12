@@ -520,6 +520,13 @@ def separate_harmonic_percussive(input_audio_file, output_dir="output"):
 
     return harmonic_file_mp3, percussive_file_mp3
 
+"""Use this to create a model and pass it to separate()"""
+def load_model(): 
+    from spleeter.separator import Separator
+    tf.compat.v1.config.experimental_run_functions_eagerly(True)
+    separator = Separator('spleeter:5stems')
+    return separator
+
 """
 Spleeter's separate_to_file
 """
@@ -656,12 +663,15 @@ def make_zip_with_shell(source_path, output_path, archive_name):
 
 # Function to convert all midi files in parallel
 import concurrent.futures
-def to_midi_all(directory, midi_directory):
+def to_midi_all(directory, midi_directory, use_concurrency):
     audio_files = [file for file in os.listdir(directory) if file.endswith('.mp3')]
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        # Process each audio file in parallel
-        executor.map(to_midi, [os.path.join(directory, file) for file in audio_files], [midi_directory] * len(audio_files))
+    if use_concurrency:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(to_midi, [os.path.join(directory, file) for file in audio_files], [midi_directory] * len(audio_files))
+    else:
+        for audio_file in audio_files:
+            to_midi(os.path.join(directory, audio_file), midi_directory)
 
 import stat
 def remove_readonly(func, path, _):
@@ -689,12 +699,12 @@ def delete_files_and_directories_in_inputs():
         shutil.rmtree(inputs_path, onerror=remove_readonly)
         os.makedirs(inputs_path)
 
-def process_music(file_path, separator):
-    # Clear any previous outputs if they exist.
+def process_music(file_path, separator, use_concurrency):
     delete_files_in_output()
 
     with open(output_path + "/chord_chart.txt", 'w') as file:
         file.write('')
+
     for file in os.listdir(output_path):
         if file != "chord_chart.txt" and file != ".DS_Store":
             try:
@@ -708,37 +718,18 @@ def process_music(file_path, separator):
                 os.remove(os.path.join(splits_path, file))
             except PermissionError as e:
                 print(f"Permission error: {e}")
-    """
-    #check command arguments 
-    if len(sys.argv) > 2 or len(sys.argv) == 0:
-        print("Please enter a valid file path as your only input.")
-        sys.exit()
 
-    #try to load the audio file, throw an exception if it's invalid
-    try: 
-        librosa.load(os.path.realpath(sys.argv[1]), sr=None)
-        print(os.path.realpath(sys.argv[1]), 'is a valid filepath.')
-    except:
-        print("The filepath you entered was not found or could not be loaded.")
-        print("filepath: ", os.path.realpath(sys.argv[1]))
-        sys.exit()
-    """
-    
-    # define audio file path
     audio_file = os.path.realpath(file_path)
     trimmed = trimmed_name = trim_file_path(audio_file)
     
-    #load file and determine tempo
     y, sr = librosa.load(audio_file, sr=None)
     tempo, beats = librosa.beat.beat_track(y=y, sr=sr)
 
-    #booleans: Determine what is in the track (for seperation)
     bass, drums, piano, vocal, other, chord_chart = bass_drum_piano_vocal_other_chart()
     
-    print("seperating sources . . . ")
-    separate(audio_file, splits_path, separator)
+    print("separating sources . . . ")
+    separate(audio_file, splits_path, separator, synchronous=True)
 
-    #convert each split to .mp3 to ensure zippability
     for stem in ['vocals', 'drums', 'piano', 'other', 'bass']:
         to_mp3_in = splits_path + '/' + trimmed + '/' + stem + '.wav'
         to_mp3_out = splits_path + '/' + trimmed + '/' + stem + '.mp3'
@@ -746,19 +737,14 @@ def process_music(file_path, separator):
         convert_wav_to_mp3(to_mp3_in, to_mp3_out)
         os.remove(to_mp3_in)
 
-    #Convert all splits to midi and write a chord chard. All files will be written to the 'outputs' folder.
     tf.compat.v1.config.experimental_run_functions_eagerly(True)
 
-    # convert all .wavs to midis concurrently 
-    #print("splitting midis using multi-threading . . . ")
-    to_midi_all(splits_path + '/' + trimmed, output_path)
+    to_midi_all(splits_path + '/' + trimmed, output_path, use_concurrency=use_concurrency)
 
-    #if chord_chart:
     chords_dict = chords_on_beats(2, audio_file)
 
     print(".mid's and chord_chart.txt all done")
 
-    #move splits to the output folder
     shutil.move(splits_path + '/' + trimmed + '/vocals.mp3', output_path)
     print('moved vocals.mp3 from splits to output')
     shutil.move(splits_path + '/' + trimmed + '/drums.mp3', output_path)
@@ -770,9 +756,6 @@ def process_music(file_path, separator):
     shutil.move(splits_path + '/' + trimmed + '/bass.mp3', output_path)
     print('moved bass.mp3 from splits to output')
 
-    # turn into a zip file
-    # shutil.make_archive(output_path + '/' + trimmed, "zip", output_path)
-    #make_zip_with_zip64(output_path, trimmed, output_path)
     print('attempting to zip...')
     make_zip_with_shell(output_path, output_path, trimmed)
     print('all zipped up!')
@@ -781,11 +764,11 @@ def process_music(file_path, separator):
     print(".mid's and chord_chart.txt are HOT out the oven in /MusicTranscribe/music_transcriber/output/")
 
 if __name__ == '__main__':
-    # Clear any previous outputs if they exist.
     delete_files_in_output()
 
     with open(output_path + "/chord_chart.txt", 'w') as file:
         file.write('')
+
     for file in os.listdir(output_path):
         if file != "chord_chart.txt" and file != ".DS_Store":
             try:
@@ -799,13 +782,11 @@ if __name__ == '__main__':
                 os.remove(os.path.join(splits_path, file))
             except PermissionError as e:
                 print(f"Permission error: {e}")
-    
-    #check command arguments 
+
     if len(sys.argv) > 2 or len(sys.argv) == 0:
         print("Please enter a valid file path as your only input.")
         sys.exit()
 
-    #try to load the audio file, throw an exception if it's invalid
     try: 
         librosa.load(os.path.realpath(sys.argv[1]), sr=None)
         print(os.path.realpath(sys.argv[1]), 'is a valid filepath.')
@@ -814,22 +795,20 @@ if __name__ == '__main__':
         print("filepath: ", os.path.realpath(sys.argv[1]))
         sys.exit()
 
-    
-    # define audio file path
     audio_file = os.path.realpath(sys.argv[1])
     trimmed = trimmed_name = trim_file_path(audio_file)
     
-    #load file and determine tempo
     y, sr = librosa.load(audio_file, sr=None)
     tempo, beats = librosa.beat.beat_track(y=y, sr=sr)
 
-    #booleans: Determine what is in the track (for seperation)
     bass, drums, piano, vocal, other, chord_chart = bass_drum_piano_vocal_other_chart()
     
-    print("seperating sources . . . ")
-    separate(audio_file, splits_path)
+    print("loading model . . . ")
+    separator = load_model()
 
-    #convert each split to .mp3 to ensure zippability
+    print("separating sources . . . ")
+    separate(audio_file, splits_path, separator, synchronous=True)
+
     for stem in ['vocals', 'drums', 'piano', 'other', 'bass']:
         to_mp3_in = splits_path + '/' + trimmed + '/' + stem + '.wav'
         to_mp3_out = splits_path + '/' + trimmed + '/' + stem + '.mp3'
@@ -837,19 +816,14 @@ if __name__ == '__main__':
         convert_wav_to_mp3(to_mp3_in, to_mp3_out)
         os.remove(to_mp3_in)
 
-    #Convert all splits to midi and write a chord chard. All files will be written to the 'outputs' folder.
     tf.compat.v1.config.experimental_run_functions_eagerly(True)
 
-    # convert all .wavs to midis concurrently 
-    #print("splitting midis using multi-threading . . . ")
-    to_midi_all(splits_path + '/' + trimmed, output_path)
+    to_midi_all(splits_path + '/' + trimmed, output_path, use_concurrency=True)
 
-    #if chord_chart:
     chords_dict = chords_on_beats(2, audio_file)
 
     print(".mid's and chord_chart.txt all done")
 
-    #move splits to the output folder
     shutil.move(splits_path + '/' + trimmed + '/vocals.mp3', output_path)
     print('moved vocals.mp3 from splits to output')
     shutil.move(splits_path + '/' + trimmed + '/drums.mp3', output_path)
@@ -861,9 +835,6 @@ if __name__ == '__main__':
     shutil.move(splits_path + '/' + trimmed + '/bass.mp3', output_path)
     print('moved bass.mp3 from splits to output')
 
-    # turn into a zip file
-    # shutil.make_archive(output_path + '/' + trimmed, "zip", output_path)
-    #make_zip_with_zip64(output_path, trimmed, output_path)
     print('attempting to zip...')
     make_zip_with_shell(output_path, output_path, trimmed)
     print('all zipped up!')

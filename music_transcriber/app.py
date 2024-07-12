@@ -41,7 +41,7 @@ if uploaded_file is not None:
     st.success(f"File {filename} uploaded successfully.")
 
     try:
-        result = process_music(file_path, separator)
+        result = process_music(file_path, separator, use_concurrency=False)
         st.success('File processed successfully.')
 
     except Exception as e:
