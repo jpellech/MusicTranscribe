@@ -771,7 +771,7 @@ def process_music(file_path, separator, use_concurrency):
     logger.info("Creating zip file...")
     make_zip_with_shell(output_path, output_path, trimmed)
     print('all zipped up!')
-    logger.info(f"Zip file created: {zip_path}")
+    logger.info(f"Zip file created")
     delete_files_and_directories_in_inputs()
     delete_files_and_directories_in_splits()
     print(".mid's and chord_chart.txt are HOT out the oven in /MusicTranscribe/music_transcriber/output/")
