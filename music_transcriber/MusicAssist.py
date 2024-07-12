@@ -12,6 +12,7 @@ import sys
 import shutil
 from zipfile import ZipFile
 import subprocess
+import logging
 
 #define local paths
 current_path = os.path.realpath(__file__)
@@ -727,9 +728,10 @@ def process_music(file_path, separator, use_concurrency):
     bass, drums, piano, vocal, other, chord_chart = bass_drum_piano_vocal_other_chart()
     
     print("separating sources . . . ")
-
+    logger.info("Starting music processing...")
+    logger.info("separating sources . . .")
     separate(audio_file, splits_path, separator)
-    print('Done separating sources.')
+    logger.info(f"Finished separation for {audio_file}...")
 
     print('converting to mp3')
     for stem in ['vocals', 'drums', 'piano', 'other', 'bass']:
@@ -742,6 +744,7 @@ def process_music(file_path, separator, use_concurrency):
     tf.compat.v1.config.experimental_run_functions_eagerly(True)
 
     print('converting to midi')    
+    logger.info("Sources separated. Converting to MIDI...")
     to_midi_all(splits_path + '/' + trimmed, output_path, use_concurrency=use_concurrency)
 
     'writing chord dictionary'
@@ -761,8 +764,10 @@ def process_music(file_path, separator, use_concurrency):
     print('moved bass.mp3 from splits to output')
 
     print('attempting to zip...')
+    logger.info("Creating zip file...")
     make_zip_with_shell(output_path, output_path, trimmed)
     print('all zipped up!')
+    logger.info(f"Zip file created: {zip_path}")
     delete_files_and_directories_in_inputs()
     delete_files_and_directories_in_splits()
     print(".mid's and chord_chart.txt are HOT out the oven in /MusicTranscribe/music_transcriber/output/")
