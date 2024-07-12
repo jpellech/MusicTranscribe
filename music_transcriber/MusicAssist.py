@@ -14,6 +14,10 @@ from zipfile import ZipFile
 import subprocess
 import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 #define local paths
 current_path = os.path.realpath(__file__)
 directory_path = os.path.dirname(current_path)
