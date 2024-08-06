@@ -9,16 +9,7 @@ Now run 'poetry install' to install MusicTranscribe dependencies from the pyproj
 **------Instructions:-------**
 To use MusicTranscribe from the shell, first cd to the MusicTranscribe folder in your filesystem with 'cd downloads' or 'cd desktop' and then 'cd MusicTranscribe'. poetry ensures MusicTranscribes poetry dependencies are active, so append 'poetry run' to the beginning of your command. Here is an example of a command line argument to use MusicTranscribe: 
 
-'(base) YourName MusicTranscribe % poetry run python3 music_transcriber/MusicAssist.py /valid/path/to/audio/file.mp3
-
-
-OR, you can run MusicAssist from the webpage with the following command: 'poetry run python3 music_transcriber/app.py' and opening the the IP address.
-
-This would look like the following in your terminal: 
-
-(base) YourName MusicTranscribe % 'poetry run python3 music_transcriber/app.py'. 
-
-Then you can go to the webpage at the given IP address and upload your file there.
+poetry run python3 music_transcriber/MusicAssist.py /valid/path/to/audio/file.mp3
 
 **------Citations:------**
 aholman and Daudzarif created the front end of the user friendly webpage bundled in with MusicTranscribe.
